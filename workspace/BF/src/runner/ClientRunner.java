@@ -5,16 +5,23 @@ import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 
+import org.omg.CORBA.ARG_IN;
+
+import javafx.application.Application;
+import javafx.stage.Stage;
 import rmi.RemoteHelper;
 import service.IOService;
+import ui.LoginApplication;
 import ui.LoginFrame;
+import ui.MainApplication;
 import ui.MainFrame;
 
 public class ClientRunner {
 	private RemoteHelper remoteHelper;
-	
+	private Controller controller;
 	public ClientRunner() {
 		linkToServer();
+		controller=new Controller(this.remoteHelper);
 		initGUI();
 	}
 	
@@ -33,8 +40,9 @@ public class ClientRunner {
 	}
 	
 	private void initGUI() {
-//		LoginFrame loginFrame=new LoginFrame();
-		MainFrame mainFrame = new MainFrame();
+		LoginApplication loginApplication=new LoginApplication(controller);
+		
+//		MainApplication mainFrame = new MainApplication(projects)
 	}
 	
 	public void test(){
@@ -48,6 +56,7 @@ public class ClientRunner {
 	
 	public static void main(String[] args){
 		ClientRunner cr = new ClientRunner();
+		
 //		cr.test();
 	}
 }

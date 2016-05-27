@@ -1,5 +1,6 @@
 package rmi;
 
+import java.io.File;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
@@ -33,9 +34,9 @@ public class DataRemoteObject extends UnicastRemoteObject implements IOService, 
 	}
 
 	@Override
-	public String readFileList(String userId) throws RemoteException{
+	public File[] readFileList(String userId,String projectName) throws RemoteException{
 		// TODO Auto-generated method stub
-		return iOService.readFileList(userId);
+		return iOService.readFileList(userId, projectName);
 	}
 
 	@Override
@@ -54,6 +55,12 @@ public class DataRemoteObject extends UnicastRemoteObject implements IOService, 
 	public boolean signin(String username, String password) throws RemoteException {
 		// TODO Auto-generated method stub
 		return userService.signin(username, password);
+	}
+
+	@Override
+	public File[] readProjectList(String userId) throws RemoteException {
+		// TODO Auto-generated method stub
+		return iOService.readProjectList(userId);
 	}
 
 }

@@ -10,19 +10,20 @@ public class SignInTest {
 
 		UserServiceImpl userServiceImpl=new UserServiceImpl();
 		try {
-			userServiceImpl.signin("hello", "hello");
-			userServiceImpl.signin("xiaoming", "ggg");
+			
+			System.out.println(userServiceImpl.signin("hello", "hello"));
+			System.out.println(userServiceImpl.signin("xiaoming", "ggg"));
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		try {
-			System.out.println(userServiceImpl.login("xiaoming", "xxx"));
-			System.out.println(userServiceImpl.login("xiaoming", "ggg"));
-		} catch (RemoteException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+//		try {
+//			System.out.println(userServiceImpl.login("xiaoming", "xxx"));
+//			System.out.println(userServiceImpl.login("xiaoming", "ggg"));
+//		} catch (RemoteException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		
 	}
 

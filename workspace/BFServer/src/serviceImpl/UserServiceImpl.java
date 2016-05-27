@@ -16,6 +16,7 @@ public class UserServiceImpl implements UserService{
 
 	ArrayList<UserInformation> userList=new ArrayList<UserInformation>();
 	
+	
 	public UserServiceImpl() {
 		// TODO Auto-generated constructor stub
 		
@@ -60,6 +61,7 @@ public class UserServiceImpl implements UserService{
 		for (int i = 0; i < userList.size(); i++) {
 			if (username.equals(userList.get(i).getName())) {
 				if (password.equals(userList.get(i).getPassword())) {
+					
 					return true;
 				}
 				break;
@@ -77,11 +79,19 @@ public class UserServiceImpl implements UserService{
 	public boolean signin(String username, String password) throws RemoteException {
 		// TODO Auto-generated method stub
 		File f = new File("user_information");
+		for (int i = 0; i < userList.size(); i++) {
+			if (username.equals(userList.get(i).getName())) {
+				return false;
+			}
+		}
 		try {
 			FileWriter fw = new FileWriter(f, true);
 			fw.write(username+" "+password+"\n");
 			fw.flush();
 			fw.close();
+			
+			File newUserLibrary=new File("project/"+username);
+			newUserLibrary.mkdir();
 			return true;
 		} catch (IOException e) {
 			e.printStackTrace();

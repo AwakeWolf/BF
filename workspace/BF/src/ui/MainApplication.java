@@ -1,6 +1,8 @@
 package ui;
 
 
+import java.io.File;
+
 import javafx.application.Application;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -18,17 +20,21 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
+import runner.Controller;
 
 public class MainApplication extends Application{
 	TextArea codeTextArea;
 	TextArea parseTextArea;
 	Label resultLabel;
 	TextField newNameTextField;
-	String[] projects;
-	String[] currentVersions;
-	public MainApplication(String[] projects) {
+	File[] projects;
+	File[] currentVersions;
+	Controller controller;
+	
+	public MainApplication(File[] projects,Controller controller) {
 		// TODO Auto-generated constructor stub
 		this.projects=projects;
+		this.controller=controller;
 	}
 	@Override
 	public void start(Stage primaryStage) throws Exception {
@@ -49,7 +55,7 @@ public class MainApplication extends Application{
 		//对openmenu的赋值，事件监听未实现
 		MenuItem[] openMenuItem=new MenuItem[projects.length];
 		for (int i = 0; i < projects.length; i++) {
-			openMenu.getItems().add(openMenuItem[i]=new MenuItem(projects[i]));
+			openMenu.getItems().add(openMenuItem[i]=new MenuItem(projects[i].getName()));
 			openMenuItem[i].setOnMenuValidation(new EventHandler<Event>() {
 				
 				@Override

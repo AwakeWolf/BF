@@ -13,13 +13,23 @@ import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import runner.Controller;
 
 public class LoginApplication extends Application{
 
+	private Controller controller;
+	
+	public Stage primaryStage;
+	public LoginApplication(Controller controller) {
+		// TODO Auto-generated constructor stub
+		this.controller=controller;
+		launch(null);
+	}
+	
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		// TODO Auto-generated method stub
-		
+		this.primaryStage=primaryStage;
 		//设置布局结构
 		GridPane grid = new GridPane();
 		grid.setAlignment(Pos.CENTER);
@@ -61,8 +71,10 @@ public class LoginApplication extends Application{
 
 			@Override
 			public void handle(MouseEvent event) {
-				// TODO Auto-generated method stub
-				errorInformation.setVisible(true);
+				if (!controller.login(userNameTextField.getText(), passwordField.getText())) {
+					// TODO Auto-generated method stub
+					errorInformation.setVisible(true);
+				}
 			}
 
 			
@@ -75,8 +87,5 @@ public class LoginApplication extends Application{
 		primaryStage.setResizable(false);
 		primaryStage.show();
 	}
-	public static void main(String[] args) {
-		launch(args);
-	}
-
+	
 }

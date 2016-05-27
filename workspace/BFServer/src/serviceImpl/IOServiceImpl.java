@@ -3,6 +3,7 @@ package serviceImpl;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.rmi.RemoteException;
 
 import service.IOService;
 
@@ -30,9 +31,17 @@ public class IOServiceImpl implements IOService{
 	}
 
 	@Override
-	public String readFileList(String userId) {
+	public File[] readFileList(String userId,String projectName) {
 		// TODO Auto-generated method stub
-		return "OK";
+		File userChoosenProject=new File("project/"+userId+"/"+projectName);
+		return userChoosenProject.listFiles();
+	}
+
+	@Override
+	public File[] readProjectList(String userId) throws RemoteException {
+		// TODO Auto-generated method stub
+		File userProjects=new File(userId);
+		return userProjects.listFiles();
 	}
 	
 }
