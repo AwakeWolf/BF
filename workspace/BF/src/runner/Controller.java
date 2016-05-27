@@ -77,5 +77,14 @@ public class Controller {
 			return null;
 		}
 	}
+	public boolean creatNewProject(String projectName){
+		try {
+			return remoteHelper.getIOService().creatNewProject(currentUser, projectName);
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
+	}
 
 }

@@ -74,5 +74,20 @@ public class IOServiceImpl implements IOService{
 		File userProjects=new File("project/"+userId);
 		return userProjects.listFiles();
 	}
+
+	@Override
+	public boolean creatNewProject(String userId, String projectName) throws RemoteException {
+		// TODO Auto-generated method stub
+		File userProject=new File("project/"+userId);
+		File[] projects=userProject.listFiles();
+		for (int i = 0; i < projects.length; i++) {
+			if (projects[i].getName().equals(projectName)) {
+				return false;
+			}
+		}
+		File newProject=new File("project/"+userId+"/"+projectName);
+		newProject.mkdirs();
+		return true;
+	}
 	
 }

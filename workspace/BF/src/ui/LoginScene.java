@@ -93,7 +93,7 @@ public class LoginScene extends Scene{
 			@Override
 			public void handle(MouseEvent event) {
 				// TODO Auto-generated method stub
-				if ((!ClientRunner.controller.signin(userNameTextField.getText(), passwordField.getText())&&!userNameTextField.getText().equals(" ")&&!passwordField.getText().equals(" "))) {
+				if ((!ClientRunner.controller.signin(userNameTextField.getText(), passwordField.getText()))) {
 					signErrorInformation.setVisible(true);
 					errorInformation.setVisible(false);
 				}else{

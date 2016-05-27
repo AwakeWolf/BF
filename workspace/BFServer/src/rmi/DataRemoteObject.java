@@ -63,4 +63,10 @@ public class DataRemoteObject extends UnicastRemoteObject implements IOService, 
 		return iOService.readProjectList(userId);
 	}
 
+	@Override
+	public boolean creatNewProject(String userId, String projectName) throws RemoteException {
+		// TODO Auto-generated method stub
+		return iOService.creatNewProject(userId, projectName);
+	}
+
 }

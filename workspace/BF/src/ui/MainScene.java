@@ -17,6 +17,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.TextAlignment;
+import javafx.stage.Stage;
 import runner.ClientRunner;
 import runner.Controller;
 
@@ -31,6 +32,8 @@ public class MainScene extends Scene{
 	Controller controller;
 	BorderPane borderPane;
 	String currentproject;
+	Menu openMenu;
+	Menu versionMenu;
 	
 //	public MainApplication(File[] projects,Controller controller) {
 //		// TODO Auto-generated constructor stub
@@ -49,51 +52,31 @@ public class MainScene extends Scene{
 		borderPane=new BorderPane();
 		MenuBar menuBar=new MenuBar();
 		//创建Version菜单
-		Menu versionMenu=new Menu("Version");
+		versionMenu=new Menu("Version");
 		//创建file菜单
 		Menu fileMenu=new Menu("File"); 
 		MenuItem newMenuItem =new MenuItem("New");
-		Menu openMenu=new Menu("Open");
+		openMenu=new Menu("Open");
 		MenuItem saveMenuItem =new MenuItem("Save");
 		MenuItem logoutMenuItem=new MenuItem("Logout");
 		MenuItem exitMenuItem =new MenuItem("Exit");
 		fileMenu.getItems().addAll(newMenuItem,openMenu,saveMenuItem,logoutMenuItem ,exitMenuItem);
 		
-		//对openmenu的赋值，选择相应项目出现历史版本，并为历史版本处理事件监听
-		projects =ClientRunner.controller.getProjects();
-		MenuItem[] openMenuItem=new MenuItem[projects.length];
-		for (int i = 0; i < projects.length; i++) {
-			openMenu.getItems().add(openMenuItem[i]=new MenuItem(projects[i].getName()));
-			currentproject=projects[i].getName();
-			openMenuItem[i].setOnAction(new EventHandler<ActionEvent>() {
-				
-				@Override
-				public void handle(ActionEvent event) {
-					// TODO Auto-generated method stub
-					fileList=ClientRunner.controller.getFileList(((MenuItem)event.getSource()).getText());
-					MenuItem[] versionMenuItem=new MenuItem[fileList.length];
-					versionMenu.getItems().remove(0, versionMenu.getItems().size());
-					for (int j = 0; j < fileList.length; j++) {
-						versionMenu.getItems().add(versionMenuItem[j]=new MenuItem(fileList[j].getName()));
-						versionMenuItem[j].setOnAction(new EventHandler<ActionEvent>() {
-							
-							@Override
-							public void handle(ActionEvent event) {
-								// TODO Auto-generated method stub
-								codeTextArea.setText(ClientRunner.controller.readFile(currentproject, ((MenuItem)event.getSource()).getText()));
-							}
-						});
-					}
-				}
-			});
+		
+		newMenuItem.setOnAction(new EventHandler<ActionEvent>() {
 			
-		}
+			@Override
+			public void handle(ActionEvent event) {
+				// TODO Auto-generated method stub
+				NewStage newStage=new NewStage(MainScene.this);
+			}
+		});
 		//创建Run菜单
 		Menu runMenu=new Menu("Run");
 		MenuItem executeMenuItem =new MenuItem("Execute");
 		runMenu.getItems().add(executeMenuItem);
 		
-		
+		initOpenMenu();
 		
 		//创建代码输入文本域
 		codeTextArea =new TextArea();
@@ -122,5 +105,38 @@ public class MainScene extends Scene{
 		borderPane.setBottom(gridPane);
 	}
 
+	public void initOpenMenu() {
+		//对openMenu的赋值，选择相应项目出现历史版本，并为历史版本处理事件监听
+		projects =ClientRunner.controller.getProjects();
+		openMenu.getItems().remove(0, openMenu.getItems().size());
+		MenuItem[] openMenuItem=new MenuItem[projects.length];
+		for (int i = 0; i < projects.length; i++) {
+			openMenu.getItems().add(openMenuItem[i]=new MenuItem(projects[i].getName()));
+			currentproject=projects[i].getName();
+			openMenuItem[i].setOnAction(new EventHandler<ActionEvent>() {
+				
+				@Override
+				public void handle(ActionEvent event) {
+					// TODO Auto-generated method stub
+					fileList=ClientRunner.controller.getFileList(((MenuItem)event.getSource()).getText());
+					MenuItem[] versionMenuItem=new MenuItem[fileList.length];
+					versionMenu.getItems().remove(0, versionMenu.getItems().size());
+					for (int j = 0; j < fileList.length; j++) {
+						versionMenu.getItems().add(versionMenuItem[j]=new MenuItem(fileList[j].getName()));
+						versionMenuItem[j].setOnAction(new EventHandler<ActionEvent>() {
+							
+							@Override
+							public void handle(ActionEvent event) {
+								// TODO Auto-generated method stub
+								codeTextArea.setText(ClientRunner.controller.readFile(currentproject, ((MenuItem)event.getSource()).getText()));
+							}
+						});
+					}
+				}
+			});
+			
+		}
+
+	}
 
 }

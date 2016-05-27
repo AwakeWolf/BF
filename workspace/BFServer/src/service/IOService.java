@@ -12,4 +12,6 @@ public interface IOService extends Remote{
 	public File[] readFileList(String userId,String projectName)throws RemoteException;
 	
 	public File[] readProjectList(String userId)throws RemoteException;
+	
+	public boolean creatNewProject(String userId,String projectName)throws RemoteException;
 }
