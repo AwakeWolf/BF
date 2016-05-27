@@ -1,6 +1,9 @@
 package serviceImpl;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.rmi.RemoteException;
@@ -27,7 +30,35 @@ public class IOServiceImpl implements IOService{
 	@Override
 	public String readFile(String userId, String fileName) {
 		// TODO Auto-generated method stub
-		return "OK";
+		File theChoosenFile=new File("project/"+userId+"/"+fileName);
+		FileReader fileReader = null;
+		StringBuffer stringBuffer = new StringBuffer();
+		BufferedReader bufferedReader = null;
+		try {
+			fileReader=new FileReader(theChoosenFile);
+			bufferedReader=new BufferedReader(fileReader);
+			String string;
+			while ((string=bufferedReader.readLine())!=null) {
+				stringBuffer.append(string);
+			}
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			try {
+				fileReader.close();
+				bufferedReader.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		
+		return stringBuffer.toString();
 	}
 
 	@Override
@@ -40,7 +71,7 @@ public class IOServiceImpl implements IOService{
 	@Override
 	public File[] readProjectList(String userId) throws RemoteException {
 		// TODO Auto-generated method stub
-		File userProjects=new File(userId);
+		File userProjects=new File("project/"+userId);
 		return userProjects.listFiles();
 	}
 	

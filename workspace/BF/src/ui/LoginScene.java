@@ -5,33 +5,33 @@ import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import runner.ClientRunner;
 import runner.Controller;
 
-public class LoginApplication extends Application{
+public class LoginScene extends Scene{
 
-	private Controller controller;
+	GridPane grid;
 	
-	public Stage primaryStage;
-	public LoginApplication(Controller controller) {
+	public LoginScene(Parent root, double width, double height) {
+		
+		super(root, width, height);
 		// TODO Auto-generated constructor stub
-		this.controller=controller;
-		launch(null);
+		initGridpane();
+		this.setRoot(grid);
 	}
-	
-	@Override
-	public void start(Stage primaryStage) throws Exception {
+	private void initGridpane() {
 		// TODO Auto-generated method stub
-		this.primaryStage=primaryStage;
-		//设置布局结构
-		GridPane grid = new GridPane();
+		grid = new GridPane();
 		grid.setAlignment(Pos.CENTER);
 		grid.setHgap(10);
 		grid.setVgap(10);
@@ -66,26 +66,43 @@ public class LoginApplication extends Application{
  		errorInformation.setTextFill(Color.RED);
  		errorInformation.setVisible(false);
  		grid.add(errorInformation,0,4,2,1);
+ 		
+ 		Label signErrorInformation=new Label("             The user has existed!");
+ 		signErrorInformation.setTextFill(Color.RED);
+ 		signErrorInformation.setVisible(false);
+ 		grid.add(signErrorInformation,0,4,2,1);
  	
  		login.setOnMouseClicked(new EventHandler<MouseEvent>() {
 
 			@Override
 			public void handle(MouseEvent event) {
-				if (!controller.login(userNameTextField.getText(), passwordField.getText())) {
+				if (!ClientRunner.controller.login(userNameTextField.getText(), passwordField.getText())) {
 					// TODO Auto-generated method stub
+					signErrorInformation.setVisible(false);
 					errorInformation.setVisible(true);
+				}else {
+					ClientRunner.controller.setCurrentUser(userNameTextField.getText());
+					ClientRunner.primaryStage.setScene(new MainScene(new BorderPane(), 500, 400));
 				}
 			}
 
 			
 		});
-		 
-		Scene scene = new Scene(grid, 300, 150);
-		primaryStage.setScene(scene);
-		
-		primaryStage.setTitle("Login");
-		primaryStage.setResizable(false);
-		primaryStage.show();
+ 		sign.setOnMouseClicked(new EventHandler<MouseEvent>() {
+
+			@Override
+			public void handle(MouseEvent event) {
+				// TODO Auto-generated method stub
+				if ((!ClientRunner.controller.signin(userNameTextField.getText(), passwordField.getText())&&!userNameTextField.getText().equals(" ")&&!passwordField.getText().equals(" "))) {
+					signErrorInformation.setVisible(true);
+					errorInformation.setVisible(false);
+				}else{
+					ClientRunner.controller.setCurrentUser(userNameTextField.getText());
+					ClientRunner.primaryStage.setScene(new MainScene(new BorderPane(), 500, 400));
+				}
+			}
+ 			
+		});
 	}
 	
 }

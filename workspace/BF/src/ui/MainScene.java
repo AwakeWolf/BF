@@ -3,13 +3,11 @@ package ui;
 
 import java.io.File;
 
-import javafx.application.Application;
-import javafx.event.Event;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Dialog;
-import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
@@ -19,49 +17,73 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.TextAlignment;
-import javafx.stage.Stage;
+import runner.ClientRunner;
 import runner.Controller;
 
-public class MainApplication extends Application{
+public class MainScene extends Scene{
+	
 	TextArea codeTextArea;
 	TextArea parseTextArea;
 	Label resultLabel;
 	TextField newNameTextField;
 	File[] projects;
-	File[] currentVersions;
+	File[] fileList;
 	Controller controller;
+	BorderPane borderPane;
+	String currentproject;
 	
-	public MainApplication(File[] projects,Controller controller) {
+//	public MainApplication(File[] projects,Controller controller) {
+//		// TODO Auto-generated constructor stub
+//		this.projects=projects;
+//		this.controller=controller;
+//	}
+	public MainScene(Parent root, double width, double height) {
+		super(root, width, height);
 		// TODO Auto-generated constructor stub
-		this.projects=projects;
-		this.controller=controller;
+		initBorderPane();
+		this.setRoot(borderPane);
 	}
-	@Override
-	public void start(Stage primaryStage) throws Exception {
+
+	private void initBorderPane() {
 		// TODO Auto-generated method stub
-		
-		
-		BorderPane borderPane=new BorderPane();
-		Scene scene=new Scene(borderPane,500,400);
+		borderPane=new BorderPane();
 		MenuBar menuBar=new MenuBar();
+		//创建Version菜单
+		Menu versionMenu=new Menu("Version");
 		//创建file菜单
 		Menu fileMenu=new Menu("File"); 
 		MenuItem newMenuItem =new MenuItem("New");
 		Menu openMenu=new Menu("Open");
 		MenuItem saveMenuItem =new MenuItem("Save");
+		MenuItem logoutMenuItem=new MenuItem("Logout");
 		MenuItem exitMenuItem =new MenuItem("Exit");
-		fileMenu.getItems().addAll(newMenuItem,openMenu,saveMenuItem,exitMenuItem);
+		fileMenu.getItems().addAll(newMenuItem,openMenu,saveMenuItem,logoutMenuItem ,exitMenuItem);
 		
-		//对openmenu的赋值，事件监听未实现
+		//对openmenu的赋值，选择相应项目出现历史版本，并为历史版本处理事件监听
+		projects =ClientRunner.controller.getProjects();
 		MenuItem[] openMenuItem=new MenuItem[projects.length];
 		for (int i = 0; i < projects.length; i++) {
 			openMenu.getItems().add(openMenuItem[i]=new MenuItem(projects[i].getName()));
-			openMenuItem[i].setOnMenuValidation(new EventHandler<Event>() {
+			currentproject=projects[i].getName();
+			openMenuItem[i].setOnAction(new EventHandler<ActionEvent>() {
 				
 				@Override
-				public void handle(Event event) {
+				public void handle(ActionEvent event) {
 					// TODO Auto-generated method stub
-					
+					fileList=ClientRunner.controller.getFileList(((MenuItem)event.getSource()).getText());
+					MenuItem[] versionMenuItem=new MenuItem[fileList.length];
+					versionMenu.getItems().remove(0, versionMenu.getItems().size());
+					for (int j = 0; j < fileList.length; j++) {
+						versionMenu.getItems().add(versionMenuItem[j]=new MenuItem(fileList[j].getName()));
+						versionMenuItem[j].setOnAction(new EventHandler<ActionEvent>() {
+							
+							@Override
+							public void handle(ActionEvent event) {
+								// TODO Auto-generated method stub
+								codeTextArea.setText(ClientRunner.controller.readFile(currentproject, ((MenuItem)event.getSource()).getText()));
+							}
+						});
+					}
 				}
 			});
 			
@@ -71,8 +93,7 @@ public class MainApplication extends Application{
 		MenuItem executeMenuItem =new MenuItem("Execute");
 		runMenu.getItems().add(executeMenuItem);
 		
-		//创建Version菜单
-		Menu versionMenu=new Menu("Version");
+		
 		
 		//创建代码输入文本域
 		codeTextArea =new TextArea();
@@ -80,11 +101,11 @@ public class MainApplication extends Application{
 		//参数输入框与结果显示
 		GridPane gridPane=new GridPane();
 		parseTextArea=new TextArea();
-		parseTextArea.setMaxHeight(scene.getHeight()/3);
+		parseTextArea.setMaxHeight(this.getHeight()/3);
 		gridPane.add(parseTextArea,0,0);
 		
 		resultLabel=new Label();
-		resultLabel.setMinSize(scene.getWidth()/2, 0);
+		resultLabel.setMinSize(this.getWidth()/2, 0);
 		resultLabel.setTextAlignment(TextAlignment.CENTER);
 		gridPane.add(resultLabel, 1, 0);
 		
@@ -99,14 +120,7 @@ public class MainApplication extends Application{
 		borderPane.setTop(menuBar);
 		borderPane.setCenter(codeTextArea);
 		borderPane.setBottom(gridPane);
-			
-		
-		primaryStage.setScene(scene);
-		primaryStage.setTitle("BF");
-		primaryStage.show();
 	}
-	public static void main(String[] args) {
-		launch(args);
-	}
+
 
 }

@@ -5,20 +5,23 @@ import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 
-import org.omg.CORBA.ARG_IN;
+import com.sun.glass.ui.TouchInputSupport;
 
 import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import rmi.RemoteHelper;
 import service.IOService;
-import ui.LoginApplication;
-import ui.LoginFrame;
-import ui.MainApplication;
-import ui.MainFrame;
+import ui.LoginScene;
+import ui.MainScene;
 
-public class ClientRunner {
+public class ClientRunner extends Application{
 	private RemoteHelper remoteHelper;
-	private Controller controller;
+	public static Controller controller;
+	private LoginScene loginScene;
+	public static Stage primaryStage;
 	public ClientRunner() {
 		linkToServer();
 		controller=new Controller(this.remoteHelper);
@@ -40,23 +43,34 @@ public class ClientRunner {
 	}
 	
 	private void initGUI() {
-		LoginApplication loginApplication=new LoginApplication(controller);
+		loginScene=new LoginScene(new GridPane(),300,150);
 		
-//		MainApplication mainFrame = new MainApplication(projects)
+//		mainScene = new MainScene(new BorderPane(),500,400);
 	}
 	
 	public void test(){
 		try {
 			System.out.println(remoteHelper.getUserService().login("admin", "123456a"));
 			System.out.println(remoteHelper.getIOService().writeFile("2", "admin", "testFile"));
+			System.out.println(remoteHelper.getIOService().readProjectList("hello"));
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		}
 	}
 	
 	public static void main(String[] args){
-		ClientRunner cr = new ClientRunner();
-		
-//		cr.test();
+
+		launch(args);
 	}
+
+	@Override
+	public void start(Stage primaryStage) throws Exception {
+		// TODO Auto-generated method stub
+		this.primaryStage=primaryStage;
+		primaryStage.setScene(loginScene);
+		
+		primaryStage.setTitle("Login");
+		primaryStage.show();
+	}
+	
 }
