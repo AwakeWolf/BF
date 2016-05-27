@@ -50,4 +50,10 @@ public class DataRemoteObject extends UnicastRemoteObject implements IOService, 
 		return userService.logout(username);
 	}
 
+	@Override
+	public boolean signin(String username, String password) throws RemoteException {
+		// TODO Auto-generated method stub
+		return userService.signin(username, password);
+	}
+
 }
